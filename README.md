@@ -7,18 +7,16 @@
 
 <!-- Replace with 1-sentence description about what this tool is or does.-->
 
-<h3 align="center">Use this repo template for all new Python projects.</h3>
+<h3 align="center">word segmentation rules generator</h3>
 
-## Description
-
-Project description goes here.
+There are some words now which are not segmented properly after the max match which is currently implemented in botok. So training RDR model on that maxmatch output will give us additional rules (.RDR) which could be convert to CQL and be added to botok.
 
 ## Project owner(s)
 
 <!-- Link to the repo owners' github profiles -->
 
-- [@10zinten](https://github.com/10zinten)
-- [@evanyerburgh](https://github.com/evanyerburgh)
+
+- [@tenzin3](https://github.com/tenzin3)
 
 ## Integrations
 
