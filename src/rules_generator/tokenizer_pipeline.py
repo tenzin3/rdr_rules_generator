@@ -1,6 +1,9 @@
 from botok.tokenizers.wordtokenizer import WordTokenizer
 
-from rules_generator.data_processor import remove_spaces_for_tokenization
+from rules_generator.data_processor import (
+    remove_all_spaces,
+    remove_spaces_for_tokenization,
+)
 
 
 class Token:
@@ -21,7 +24,7 @@ def botok_word_tokenizer_pipeline(gold_corpus: str, split_affixes=False):
     """
     tokenizer = WordTokenizer()
     botok_tokens = tokenizer.tokenize(words_joined_corpus, split_affixes=split_affixes)
-    tokens = [Token(token.text.strip(), token.pos) for token in botok_tokens]
+    tokens = [Token(remove_all_spaces(token.text), token.pos) for token in botok_tokens]
 
     return tokens
 

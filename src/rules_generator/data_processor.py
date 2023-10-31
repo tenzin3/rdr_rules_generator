@@ -12,6 +12,13 @@ def normalise_space(text: str) -> str:
     return text
 
 
+def remove_all_spaces(text: str) -> str:
+    pattern = r"\s+"
+    replacement = ""
+    text = re.sub(pattern, replacement, text)
+    return text
+
+
 def normalise_tsek(text: str) -> str:
     # there are no tsek, we are using botok's tsek
     return re.sub(r"[་༌]", TSEK, text)
