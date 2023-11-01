@@ -1,3 +1,4 @@
+import json
 from pathlib import Path
 from typing import List
 
@@ -134,12 +135,26 @@ def get_syllables(text: str) -> List[str]:
     return text_syllables
 
 
+def write_tokens_to_file(tokens, filename):
+    json_obj = [
+        {"id": i, "text": token.text, "pos": token.pos, "tag": token.tag}
+        for i, token in enumerate(tokens)
+    ]
+
+    with open(filename, "w", encoding="utf-8") as f:
+        json.dump(json_obj, f, ensure_ascii=False, indent=4)
+
+
+def read_tokens_from_file(jsonfilename):
+    with open(jsonfilename, encoding="utf-8") as f:
+        data = json.load(f)
+
+    tokens = [Token(item["text"], item["pos"], item["tag"]) for item in data]
+    return tokens
+
+
 if __name__ == "__main__":
-    gold_corpus = Path(DATA_DIR / "gold_corpus.txt").read_text(encoding="utf-8")
+    gold_corpus = Path(DATA_DIR / "TIB_train.txt").read_text(encoding="utf-8")
     tokens = tagger(gold_corpus)
-    tagged_content = ""
-    for token in tokens:
-        tagged_content += rf"{token.text}\{token.tag} "
-    Path(DATA_DIR / "gold_corpus_tagged.txt").write_text(
-        tagged_content, encoding="utf-8"
-    )
+    json_file_name = Path(DATA_DIR / "gold_corpus_tokens.json")
+    write_tokens_to_file(tokens, json_file_name)

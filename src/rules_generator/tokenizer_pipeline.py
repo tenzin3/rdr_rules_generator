@@ -10,7 +10,7 @@ class Token:
     def __init__(self, text, pos=None, tag=None):
         self.text = text
         self.pos = pos
-        self.tag = None
+        self.tag = tag
 
     def __str__(self):
         return f"Token(text={self.text}, pos={self.pos})"
