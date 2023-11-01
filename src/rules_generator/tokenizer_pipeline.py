@@ -7,15 +7,16 @@ from rules_generator.data_processor import (
 
 
 class Token:
-    def __init__(self, text, pos=None):
+    def __init__(self, text, pos=None, tag=None):
         self.text = text
         self.pos = pos
+        self.tag = None
 
     def __str__(self):
         return f"Token(text={self.text}, pos={self.pos})"
 
 
-def botok_word_tokenizer_pipeline(gold_corpus: str, split_affixes=False):
+def botok_word_tokenizer_pipeline(gold_corpus: str, split_affixes=True):
     words_joined_corpus = remove_spaces_for_tokenization(gold_corpus)
 
     """
@@ -33,4 +34,5 @@ if __name__ == "__main__":
     tokens = botok_word_tokenizer_pipeline(
         "༄༅། །རྒྱལ་པོ་ ལ་ གཏམ་ བྱ་བ་ རིན་པོ་ཆེ-འི་ ཕྲེང་བ།  ༄༅༅། །རྒྱ་གར་ སྐད་དུ།"
     )
-    print(tokens)
+    for token in tokens:
+        print(token.text, end=" ")
