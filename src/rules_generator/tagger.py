@@ -1,6 +1,6 @@
 import json
 from pathlib import Path
-from typing import List
+from typing import List, Union
 
 from botok import TSEK
 
@@ -135,18 +135,36 @@ def get_syllables(text: str) -> List[str]:
     return text_syllables
 
 
-def write_tokens_to_file(tokens, filename):
+def write_tokens_to_text_file(tokens, file_path: Union[str, Path]):
+    file_path = Path(file_path)
+    if file_path.suffix != ".txt":
+        raise ValueError("The file path must be a .txt file.")
+
+    with open(file_path, "w", encoding="utf-8") as f:
+        for token in tokens:
+            f.write(rf"{token.text}\{token.tag} ")
+
+
+def write_tokens_to_json_file(tokens, file_path: Union[str, Path]):
+    file_path = Path(file_path)
+    if file_path.suffix != ".json":
+        raise ValueError("The file path must be a .json file.")
+
     json_obj = [
         {"id": i, "text": token.text, "pos": token.pos, "tag": token.tag}
         for i, token in enumerate(tokens)
     ]
 
-    with open(filename, "w", encoding="utf-8") as f:
+    with open(file_path, "w", encoding="utf-8") as f:
         json.dump(json_obj, f, ensure_ascii=False, indent=4)
 
 
-def read_tokens_from_file(jsonfilename):
-    with open(jsonfilename, encoding="utf-8") as f:
+def read_tokens_from_json_file(file_path: Union[str, Path]):
+    file_path = Path(file_path)
+    if file_path.suffix != ".json":
+        raise ValueError("The file path must be a .json file.")
+
+    with open(file_path, encoding="utf-8") as f:
         data = json.load(f)
 
     tokens = [Token(item["text"], item["pos"], item["tag"]) for item in data]
@@ -156,5 +174,7 @@ def read_tokens_from_file(jsonfilename):
 if __name__ == "__main__":
     gold_corpus = Path(DATA_DIR / "TIB_train.txt").read_text(encoding="utf-8")
     tokens = tagger(gold_corpus)
-    json_file_name = Path(DATA_DIR / "gold_corpus_tokens.json")
-    write_tokens_to_file(tokens, json_file_name)
+    json_file_path = Path(DATA_DIR / "gold_corpus_tokens.json")
+    write_tokens_to_json_file(tokens, json_file_path)
+    text_file_path = Path(DATA_DIR / "gold_corpus_tokens.txt")
+    write_tokens_to_text_file(tokens, text_file_path)
