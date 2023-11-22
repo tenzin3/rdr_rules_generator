@@ -54,7 +54,7 @@ def tagger(gold_corpus):
 
     gold_corpus = separate_punctuations_for_tagging(gold_corpus)
     corpus_tokens = [
-        Token(remove_all_spaces(token_text)) for token_text in gold_corpus.split()
+        Token(text=remove_all_spaces(token_text)) for token_text in gold_corpus.split()
     ]
 
     index = 0
