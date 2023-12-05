@@ -29,7 +29,7 @@ def write_tokens_to_text_file(tokens: List[LineTagger], file_path: Union[str, Pa
     with open(file_path, "w", encoding="utf-8") as f:
         for line_token in tokens:
             for token in line_token.tokens:
-                f.write(rf"{token.text}\{token.tag} ")
+                f.write(rf"{token.text}/{token.tag} ")
             f.write("\n")
 
 

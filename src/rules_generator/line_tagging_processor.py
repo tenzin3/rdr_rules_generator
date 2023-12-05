@@ -99,5 +99,5 @@ def line_by_line_tagger(gold_corpus: str) -> List[LineTagger]:
 if __name__ == "__main__":
     gold_corpus = Path(DATA_DIR / "TIB_train.txt").read_text(encoding="utf-8")
     tagged_tokens = line_by_line_tagger(gold_corpus)
-    write_tokens_to_text_file(tagged_tokens, Path(DATA_DIR / "gold_corpus_tagged.txt"))
-    write_tokens_to_json_file(tagged_tokens, Path(DATA_DIR / "gold_corpus_tagged.json"))
+    write_tokens_to_text_file(tagged_tokens, Path(DATA_DIR / "tagged_tokens.txt"))
+    write_tokens_to_json_file(tagged_tokens, Path(DATA_DIR / "tagged_tokens.json"))
