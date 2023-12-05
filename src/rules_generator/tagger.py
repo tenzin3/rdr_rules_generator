@@ -1,6 +1,4 @@
-import json
-from pathlib import Path
-from typing import List, Union
+from typing import List
 
 from botok import TSEK
 
@@ -8,17 +6,15 @@ from rules_generator.config import (
     AFFIXES,
     AFFIXES_WITH_TSEK,
     AFFIXES_WITHOUT_TSEK,
-    DATA_DIR,
     PUNCTS,
 )
-from rules_generator.data_processor import (
-    remove_all_spaces,
-    separate_punctuations_for_tagging,
-)
-from rules_generator.tokenizer_pipeline import Token, botok_word_tokenizer_pipeline
+from rules_generator.tokenizer_pipeline import Token
+from rules_generator.utility import get_syllables
 
 
-def find_next_matching_token(tokenized_tokens, index, corpus_tokens, idx):
+def find_next_matching_token(
+    tokenized_tokens: List[Token], index: int, corpus_tokens: List[Token], idx: int
+):
     def get_combined_text(tokens, end):
         """Get the combined text of the tokens up to the given end index."""
         return "".join([token.text for token in tokens[: end + 1]])
@@ -47,16 +43,7 @@ def find_next_matching_token(tokenized_tokens, index, corpus_tokens, idx):
     return index, idx
 
 
-def tagger(gold_corpus):
-    gold_corpus = gold_corpus.strip()
-
-    tokenized_tokens = botok_word_tokenizer_pipeline(gold_corpus)
-
-    gold_corpus = separate_punctuations_for_tagging(gold_corpus)
-    corpus_tokens = [
-        Token(text=remove_all_spaces(token_text)) for token_text in gold_corpus.split()
-    ]
-
+def tagger(tokenized_tokens: List[Token], corpus_tokens: List[Token]) -> List[Token]:
     index = 0
     idx = 0
     while index < len(tokenized_tokens) and idx < len(corpus_tokens):
@@ -122,59 +109,5 @@ def tagger(gold_corpus):
     return tokenized_tokens
 
 
-def count_syllables(text: str) -> int:
-    return len([element for element in text.split(TSEK) if element.strip() != ""])
-
-
-def get_syllables(text: str) -> List[str]:
-    text
-    tsek_split_text = text.split(TSEK)
-    text_syllables = [syl + TSEK for syl in tsek_split_text[:-1] if syl != ""]
-    if tsek_split_text[-1] != "":
-        text_syllables.append(tsek_split_text[-1])
-    return text_syllables
-
-
-def write_tokens_to_text_file(tokens, file_path: Union[str, Path]):
-    file_path = Path(file_path)
-    if file_path.suffix != ".txt":
-        raise ValueError("The file path must be a .txt file.")
-
-    with open(file_path, "w", encoding="utf-8") as f:
-        for token in tokens:
-            f.write(rf"{token.text}\{token.tag} ")
-
-
-def write_tokens_to_json_file(tokens, file_path: Union[str, Path]):
-    file_path = Path(file_path)
-    if file_path.suffix != ".json":
-        raise ValueError("The file path must be a .json file.")
-
-    json_obj = [
-        {"id": i, "text": token.text, "pos": token.pos, "tag": token.tag}
-        for i, token in enumerate(tokens)
-    ]
-
-    with open(file_path, "w", encoding="utf-8") as f:
-        json.dump(json_obj, f, ensure_ascii=False, indent=4)
-
-
-def read_tokens_from_json_file(file_path: Union[str, Path]):
-    file_path = Path(file_path)
-    if file_path.suffix != ".json":
-        raise ValueError("The file path must be a .json file.")
-
-    with open(file_path, encoding="utf-8") as f:
-        data = json.load(f)
-
-    tokens = [Token(item["text"], item["pos"], item["tag"]) for item in data]
-    return tokens
-
-
 if __name__ == "__main__":
-    gold_corpus = Path(DATA_DIR / "TIB_train.txt").read_text(encoding="utf-8")
-    tokens = tagger(gold_corpus)
-    json_file_path = Path(DATA_DIR / "gold_corpus_tokens.json")
-    write_tokens_to_json_file(tokens, json_file_path)
-    text_file_path = Path(DATA_DIR / "gold_corpus_tokens.txt")
-    write_tokens_to_text_file(tokens, text_file_path)
+    pass
