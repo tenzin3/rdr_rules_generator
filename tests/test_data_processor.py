@@ -41,6 +41,6 @@ def test_remove_spaces_for_tokenization():
 
 def test_separate_punctuations_for_tagging():
     words_and_puncts = "༄༅༅། །རྒྱ་གར་ སྐད་དུ།"
-    expected_result = "༄༅༅།_། རྒྱ་གར་ སྐད་དུ །"
+    expected_result = "༄༅༅།། རྒྱ་གར་ སྐད་དུ །"
     result = separate_punctuations_for_tagging(words_and_puncts)
     assert result == expected_result

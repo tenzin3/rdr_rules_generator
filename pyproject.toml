@@ -27,6 +27,7 @@ dev = [
     "pytest",
     "pytest-cov",
     "pre-commit",
+    "pydantic <= 2.5.1",
 ]
 
 

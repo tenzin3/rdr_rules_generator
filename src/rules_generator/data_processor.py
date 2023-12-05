@@ -12,6 +12,13 @@ def normalise_space(text: str) -> str:
     return text
 
 
+def remove_all_spaces(text: str) -> str:
+    pattern = r"\s+"
+    replacement = ""
+    text = re.sub(pattern, replacement, text)
+    return text
+
+
 def normalise_tsek(text: str) -> str:
     # there are no tsek, we are using botok's tsek
     return re.sub(r"[་༌]", TSEK, text)
@@ -69,7 +76,7 @@ def separate_punctuations_for_tagging(gold_corpus: str) -> str:
     output/return: separting punctuations from words and joining punctuations together
     """
     patterns = [
-        (rf"([{PUNCTS_CHAR_SET}])\s+([{PUNCTS_CHAR_SET}])", r"\1_\2"),
+        (rf"([{PUNCTS_CHAR_SET}])\s+([{PUNCTS_CHAR_SET}])", r"\1\2"),
     ]
 
     for pattern, replacement in patterns:
