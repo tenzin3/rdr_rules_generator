@@ -1,6 +1,6 @@
 from typing import Dict, List, Optional
 
-from rules_generator.Token import LineTagger
+from rules_generator.Token import LineTagger, Token
 
 
 class Object:
@@ -47,19 +47,19 @@ def getWordTag(wordTag):
     return word, tag
 
 
-def getObject(wordTags, index):  # Sequence of "Word/Tag"
-    word, tag = getWordTag(wordTags[index])
+def getObject(tokens: List[Token], index):  # Sequence of "Word/Tag"
     preWord1 = preTag1 = preWord2 = preTag2 = ""
     nextWord1 = nextTag1 = nextWord2 = nextTag2 = ""
 
+    word, tag = tokens[index].text, tokens[index].tag
     if index > 0:
-        preWord1, preTag1 = getWordTag(wordTags[index - 1])
+        preWord1, preTag1 = tokens[index - 1].text, tokens[index - 1].tag
     if index > 1:
-        preWord2, preTag2 = getWordTag(wordTags[index - 2])
-    if index < len(wordTags) - 1:
-        nextWord1, nextTag1 = getWordTag(wordTags[index + 1])
-    if index < len(wordTags) - 2:
-        nextWord2, nextTag2 = getWordTag(wordTags[index + 2])
+        preWord2, preTag2 = tokens[index - 2].text, tokens[index - 2].tag
+    if index < len(tokens) - 1:
+        nextWord1, nextTag1 = tokens[index + 1].text, tokens[index + 1].tag
+    if index < len(tokens) - 2:
+        nextWord2, nextTag2 = tokens[index + 2].text, tokens[index + 2].tag
 
     return Object(
         word,
@@ -78,18 +78,11 @@ def getObject(wordTags, index):  # Sequence of "Word/Tag"
 def getObjectDictionary(tagged_tokens: List[LineTagger]):
     objects: Dict[str, Dict[str, List]] = {}
 
-    for line_of_tokenized_tokens in tagged_tokens:
-        initWordTags = []
-        goldWordTags = []
-        for token in line_of_tokenized_tokens.tokens:
-            tag = tag = token.tag if token.tag is not None else ""
-            goldWordTags.append(token.text + "/" + tag)
-            initWordTags.append(token.text + "/" + "U")
+    for line_of_tokens in tagged_tokens:
 
-        for k in range(len(initWordTags)):
-            initWord, initTag = getWordTag(initWordTags[k])
-            goldWord, correctTag = getWordTag(goldWordTags[k])
-
+        for index, token in enumerate(line_of_tokens.tokens):
+            correctTag = token.tag if token.tag is not None else ""
+            initTag = "U"
             if initTag not in objects.keys():
                 objects[initTag] = {}
                 objects[initTag][initTag] = []
@@ -97,7 +90,7 @@ def getObjectDictionary(tagged_tokens: List[LineTagger]):
             if correctTag not in objects[initTag].keys():
                 objects[initTag][correctTag] = []
 
-            objects[initTag][correctTag].append(getObject(initWordTags, k))
+            objects[initTag][correctTag].append(getObject(line_of_tokens.tokens, index))
 
     return objects
 
