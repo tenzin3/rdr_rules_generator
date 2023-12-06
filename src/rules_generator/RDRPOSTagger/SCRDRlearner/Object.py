@@ -7,14 +7,15 @@ class Object:
     attributes = [
         "word",
         "tag",
+        "pos",
         "prevWord2",
         "prevWord1",
         "nextWord1",
         "nextWord2",
-        "prevTag2",
-        "prevTag1",
-        "nextTag1",
-        "nextTag2",
+        "prevPos2",
+        "prevPos1",
+        "nextPos1",
+        "nextPos2",
     ]
 
     def __init__(self, *args):
@@ -48,30 +49,31 @@ def getWordTag(wordTag):
 
 
 def getObject(tokens: List[Token], index):  # Sequence of "Word/Tag"
-    preWord1 = preTag1 = preWord2 = preTag2 = ""
-    nextWord1 = nextTag1 = nextWord2 = nextTag2 = ""
+    preWord1 = prePos1 = preWord2 = prePos2 = ""
+    nextWord1 = nextPos1 = nextWord2 = nextPos2 = ""
 
-    word, tag = tokens[index].text, tokens[index].tag
+    word, tag, pos = tokens[index].text, tokens[index].tag, tokens[index].pos
     if index > 0:
-        preWord1, preTag1 = tokens[index - 1].text, tokens[index - 1].tag
+        preWord1, prePos1 = tokens[index - 1].text, tokens[index - 1].pos
     if index > 1:
-        preWord2, preTag2 = tokens[index - 2].text, tokens[index - 2].tag
+        preWord2, prePos2 = tokens[index - 2].text, tokens[index - 2].pos
     if index < len(tokens) - 1:
-        nextWord1, nextTag1 = tokens[index + 1].text, tokens[index + 1].tag
+        nextWord1, nextPos1 = tokens[index + 1].text, tokens[index + 1].pos
     if index < len(tokens) - 2:
-        nextWord2, nextTag2 = tokens[index + 2].text, tokens[index + 2].tag
+        nextWord2, nextPos2 = tokens[index + 2].text, tokens[index + 2].pos
 
     return Object(
         word,
         tag,
+        pos,
         preWord2,
         preWord1,
         nextWord1,
         nextWord2,
-        preTag2,
-        preTag1,
-        nextTag1,
-        nextTag2,
+        prePos2,
+        prePos1,
+        nextPos1,
+        nextPos2,
     )
 
 

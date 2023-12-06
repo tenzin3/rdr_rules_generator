@@ -39,13 +39,13 @@ def generateRules(object):
     rule10 = rule4 + " and " + rule6
 
     # 12. Next 1st tag
-    rule12 = 'object.nextTag1 == "' + object.nextTag1 + '"'
+    rule12 = 'object.nextPos1 == "' + object.nextPos1 + '"'
     # 13. Next 2nd tag
-    rule13 = 'object.nextTag2 == "' + object.nextTag2 + '"'
+    rule13 = 'object.nextPos2 == "' + object.nextPos2 + '"'
     # 14. Previous 1st tag
-    rule14 = 'object.prevTag1 == "' + object.prevTag1 + '"'
+    rule14 = 'object.prevPos1 == "' + object.prevPos1 + '"'
     # 15. Previous 2nd tag
-    rule15 = 'object.prevTag2 == "' + object.prevTag2 + '"'
+    rule15 = 'object.prevPos2 == "' + object.prevPos2 + '"'
     # 16. Next 1st tag and next 2nd tag
     rule16 = rule12 + " and " + rule13
     # 17. Previous 2nd tag and previous 1st tag
