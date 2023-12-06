@@ -1,97 +1,136 @@
 from typing import Dict, List
 
+from ordered_set import OrderedSet
+
 from rules_generator.RDRPOSTagger.SCRDRlearner.Node import Node
 from rules_generator.RDRPOSTagger.SCRDRlearner.Object import getObjectDictionary
 from rules_generator.RDRPOSTagger.SCRDRlearner.SCRDRTree import SCRDRTree
 from rules_generator.Token import LineTagger
 
 
+def is_empty_pos(pos: str) -> bool:
+    return pos in ["NO_POS", ""]
+
+
+def get_rule_variations(
+    index, start_index, end_index, current_rule, wordrules, posrules, object_pos_list
+):
+    if start_index == 2 and index == 2 and index == end_index - 1:
+        if not is_empty_pos(object_pos_list[index]):
+            return [
+                current_rule + wordrules[index] + " and " + posrules[index],
+            ]
+        else:
+            return [current_rule + wordrules[index]]
+    if index == 2 and index == end_index - 1:
+        if not is_empty_pos(object_pos_list[index]):
+            return [
+                current_rule + wordrules[index],
+                current_rule + wordrules[index] + " and " + posrules[index],
+            ]
+        else:
+            return [current_rule + wordrules[index]]
+    if index == end_index - 1:
+        if not is_empty_pos(object_pos_list[index]):
+            return [
+                current_rule + posrules[index],
+                current_rule + wordrules[index],
+                current_rule + wordrules[index] + " and " + posrules[index],
+            ]
+        else:
+            return [current_rule + wordrules[index]]
+
+    pos_rules = []
+    if index != 2:
+        pos_rules = get_rule_variations(
+            index + 1,
+            index,
+            end_index,
+            current_rule + posrules[index] + " and ",
+            wordrules,
+            posrules,
+            object_pos_list,
+        )
+    word_rules = get_rule_variations(
+        index + 1,
+        index,
+        end_index,
+        current_rule + wordrules[index] + " and ",
+        wordrules,
+        posrules,
+        object_pos_list,
+    )
+
+    word_and_pos_rules = []
+    if not is_empty_pos(object_pos_list[index]):
+        word_and_pos_rules = get_rule_variations(
+            index + 1,
+            index,
+            end_index,
+            current_rule + wordrules[index] + " and " + posrules[index] + " and ",
+            wordrules,
+            posrules,
+            object_pos_list,
+        )
+    return pos_rules + word_rules + word_and_pos_rules
+
+
 # Generate concrete rules based on input object of 5-word window context object
 def generateRules(object):
-    # 1. Current word
+
     rule1 = 'object.word == "' + object.word + '"'
-    # 2. Next 1st word
     rule2 = 'object.nextWord1 == "' + object.nextWord1 + '"'
-    # 3. Next 2nd word
     rule3 = 'object.nextWord2 == "' + object.nextWord2 + '"'
-    # 4. Previous 1st word
     rule4 = 'object.prevWord1 == "' + object.prevWord1 + '"'
-    # 5. Previous 2nd word
     rule5 = 'object.prevWord2 == "' + object.prevWord2 + '"'
 
-    # 6. Current word and next 1st word
-    rule6 = rule1 + " and " + rule2
-    # 7. Previous 1st word and current word
-    rule7 = rule4 + " and " + rule1
-    # 11. Previous 1st word and next 1st word
-    rule11 = rule4 + " and " + rule2
-
-    # 19. Current word and next 2nd word
-    rule19 = rule1 + " and " + rule3
-    # 20. Previous 2nd word and current word
-    rule20 = rule5 + " and " + rule1
-
-    # 8. Current word, next 1st word and next 2nd word
-    rule8 = rule6 + " and " + rule3
-    # 9. Previous 2nd word, previous 1st word and current word
-    rule9 = rule5 + " and " + rule7
-    # 10. Previous 1st word, current word and next 1st word
-    rule10 = rule4 + " and " + rule6
-
-    # 12. Next 1st tag
-    rule12 = 'object.nextPos1 == "' + object.nextPos1 + '"'
-    # 13. Next 2nd tag
-    rule13 = 'object.nextPos2 == "' + object.nextPos2 + '"'
-    # 14. Previous 1st tag
-    rule14 = 'object.prevPos1 == "' + object.prevPos1 + '"'
-    # 15. Previous 2nd tag
-    rule15 = 'object.prevPos2 == "' + object.prevPos2 + '"'
-    # 16. Next 1st tag and next 2nd tag
-    rule16 = rule12 + " and " + rule13
-    # 17. Previous 2nd tag and previous 1st tag
-    rule17 = rule15 + " and " + rule14
-    # 18. Previous 1st tag and next 1st tag
-    rule18 = rule14 + " and " + rule12
-
-    # 21. Current word and next 1st tag
-    rule21 = rule1 + " and " + rule12
-    # 22. Current word and previous 1st tag
-    rule22 = rule14 + " and " + rule1
-    # 23. Previous 1st tag, current word and next 1st tag
-    rule23 = rule14 + " and " + rule21
-    # 24. Current word and 2 next tags.
-    rule24 = rule1 + " and " + rule16
-    # 25. 2 previous tags and current word
-    rule25 = rule17 + " and " + rule1
+    rule6 = 'object.pos == "' + object.pos + '"'
+    rule7 = 'object.nextPos1 == "' + object.nextPos1 + '"'
+    rule8 = 'object.nextPos2 == "' + object.nextPos2 + '"'
+    rule9 = 'object.prevPos1 == "' + object.prevPos1 + '"'
+    rule10 = 'object.prevPos2 == "' + object.prevPos2 + '"'
 
     rules = []
-    rules.append(rule1)
-    rules.append(rule2)
-    rules.append(rule3)
-    rules.append(rule4)
-    rules.append(rule5)
-    rules.append(rule6)
-    rules.append(rule7)
-    rules.append(rule8)
-    rules.append(rule9)
-    rules.append(rule10)
-    rules.append(rule11)
-    rules.append(rule12)
-    rules.append(rule13)
-    rules.append(rule14)
-    rules.append(rule15)
-    rules.append(rule16)
-    rules.append(rule17)
-    rules.append(rule18)
-    rules.append(rule19)
-    rules.append(rule20)
-    rules.append(rule21)
-    rules.append(rule22)
-    rules.append(rule23)
-    rules.append(rule24)
-    rules.append(rule25)
+    wordrules = [rule5, rule4, rule1, rule2, rule3]
+    posrules = [rule10, rule9, rule6, rule7, rule8]
+    object_word_list = [
+        object.prevWord2,
+        object.prevWord1,
+        object.word,
+        object.nextWord1,
+        object.nextWord2,
+    ]
 
-    rules_set_dtype = set(rules)
+    object_pos_list = [
+        object.prevPos2,
+        object.prevPos1,
+        object.pos,
+        object.nextPos1,
+        object.nextPos2,
+    ]
+
+    for index in range(0, 3):
+        if object_word_list[index]:
+            if object_word_list[4]:
+                rules.extend(
+                    get_rule_variations(
+                        index, index, 5, "", wordrules, posrules, object_pos_list
+                    )
+                )
+            if object_word_list[3]:
+                rules.extend(
+                    get_rule_variations(
+                        index, index, 4, "", wordrules, posrules, object_pos_list
+                    )
+                )
+            rules.extend(
+                get_rule_variations(
+                    index, index, 3, "", wordrules, posrules, object_pos_list
+                )
+            )
+
+    rules_set_dtype = OrderedSet(rules)
+
     return rules_set_dtype
 
 
