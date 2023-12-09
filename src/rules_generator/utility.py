@@ -1,4 +1,6 @@
 import json
+import time
+from functools import wraps
 from pathlib import Path
 from typing import List, Union
 
@@ -55,6 +57,22 @@ def read_tokens_from_json_file(file_path: Union[str, Path]) -> List[LineTagger]:
         # Deserialize the JSON data back into LineTagger objects
         data = json.load(f)
         return [LineTagger(**item) for item in data]
+
+
+def measure_execution_time(custom_name=None):
+    def decorator(func):
+        @wraps(func)
+        def wrapper(*args, **kwargs):
+            start_time = time.time()
+            result = func(*args, **kwargs)
+            end_time = time.time()
+            name = custom_name if custom_name else func.__name__
+            print(f"Total time taken for {name}: {end_time - start_time} seconds.")
+            return result
+
+        return wrapper
+
+    return decorator
 
 
 if __name__ == "__main__":
