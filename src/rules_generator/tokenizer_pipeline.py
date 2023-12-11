@@ -1,4 +1,4 @@
-from typing import List
+from typing import Iterator
 
 from botok.tokenizers.wordtokenizer import WordTokenizer
 
@@ -11,7 +11,9 @@ from rules_generator.utility import measure_execution_time
 
 
 @measure_execution_time(custom_name="Tokenization")
-def botok_word_tokenizer_pipeline(gold_corpus: str, split_affixes=True) -> List[Token]:
+def botok_word_tokenizer_pipeline(
+    gold_corpus: str, split_affixes=True
+) -> Iterator[Token]:
     words_joined_corpus = remove_spaces_for_tokenization(gold_corpus)
 
     """
@@ -20,12 +22,9 @@ def botok_word_tokenizer_pipeline(gold_corpus: str, split_affixes=True) -> List[
     """
     tokenizer = WordTokenizer()
     botok_tokens = tokenizer.tokenize(words_joined_corpus, split_affixes=split_affixes)
-    tokens = [
-        Token(text=remove_all_spaces(token.text), pos=token.pos)
-        for token in botok_tokens
-    ]
 
-    return tokens
+    for token in botok_tokens:
+        yield Token(text=remove_all_spaces(token.text), pos=token.pos)
 
 
 if __name__ == "__main__":

@@ -1,4 +1,4 @@
-from typing import Dict, List, Optional
+from typing import Dict, Iterator, List, Optional
 
 from rules_generator.Token import LineTagger, Token
 
@@ -77,7 +77,7 @@ def getObject(tokens: List[Token], index):  # Sequence of "Word/Tag"
     )
 
 
-def getObjectDictionary(tagged_tokens: List[LineTagger]):
+def getObjectDictionary(tagged_tokens: Iterator[LineTagger]):
     objects: Dict[str, Dict[str, List]] = {}
 
     for line_of_tokens in tagged_tokens:

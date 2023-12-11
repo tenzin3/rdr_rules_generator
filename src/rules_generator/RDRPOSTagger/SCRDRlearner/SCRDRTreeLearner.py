@@ -1,4 +1,4 @@
-from typing import Dict, List
+from typing import Dict, Iterator, List
 
 from ordered_set import OrderedSet
 
@@ -308,7 +308,7 @@ class SCRDRTreeLearner(SCRDRTree):
             currentNode = node
             self.buildNodeForObjectSet(needToCorrectObjects, currentNode)
 
-    def learnRDRTree(self, tagged_tokens: List[LineTagger]):
+    def learnRDRTree(self, tagged_tokens: Iterator[LineTagger]):
         self.root = Node("True", 'object.conclusion = "NN"', None, None, None, [], 0)
 
         objects = getObjectDictionary(tagged_tokens)
