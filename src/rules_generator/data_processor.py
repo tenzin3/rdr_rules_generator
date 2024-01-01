@@ -83,11 +83,3 @@ def separate_punctuations_for_tagging(gold_corpus: str) -> str:
         gold_corpus = re.sub(pattern, replacement, gold_corpus)
 
     return gold_corpus
-
-
-if __name__ == "__main__":
-    gold_corpus = (
-        "༄༅། །རྒྱལ་པོ་ ལ་ གཏམ་ བྱ་བ་ རིན་པོ་ཆེ-འི་ ཕྲེང་བ།  ༄༅༅། །རྒྱ་གར་ སྐད་དུ།"
-    )
-    print(remove_spaces_for_tokenization(gold_corpus))
-    print(separate_punctuations_for_tagging(gold_corpus))

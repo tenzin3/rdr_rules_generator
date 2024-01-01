@@ -107,7 +107,3 @@ def tagger(tokenized_tokens: List[Token], corpus_tokens: List[Token]) -> List[To
         idx = next_idx
 
     return tokenized_tokens
-
-
-if __name__ == "__main__":
-    pass

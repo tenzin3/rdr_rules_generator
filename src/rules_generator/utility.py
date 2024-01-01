@@ -6,7 +6,6 @@ from typing import List, Union
 
 from botok import TSEK
 
-from rules_generator.config import DATA_DIR
 from rules_generator.Token import LineTagger
 
 
@@ -73,9 +72,3 @@ def measure_execution_time(custom_name=None):
         return wrapper
 
     return decorator
-
-
-if __name__ == "__main__":
-    tagged_tokens_json_file = DATA_DIR / "gold_corpus_tagged.json"
-    tagged_tokens = read_tokens_from_json_file(tagged_tokens_json_file)
-    print(tagged_tokens)

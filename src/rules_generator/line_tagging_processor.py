@@ -1,7 +1,6 @@
-from pathlib import Path
 from typing import Iterator, List
 
-from rules_generator.config import DATA_DIR, PUNCTS
+from rules_generator.config import PUNCTS
 from rules_generator.data_processor import (
     remove_all_spaces,
     separate_punctuations_for_tagging,
@@ -9,11 +8,7 @@ from rules_generator.data_processor import (
 from rules_generator.tagger import tagger
 from rules_generator.Token import LineTagger, Token
 from rules_generator.tokenizer_pipeline import botok_word_tokenizer_pipeline
-from rules_generator.utility import (
-    measure_execution_time,
-    write_tokens_to_json_file,
-    write_tokens_to_text_file,
-)
+from rules_generator.utility import measure_execution_time
 
 
 def join_tokens_in_sentence(tokens: Iterator[Token]) -> Iterator[LineTagger]:
@@ -94,10 +89,3 @@ def line_by_line_tagger(
             # Print the text of the line where an error occurred
             print("Error occured in line:", line_of_tokenized_tokens.text)
     # Return only successfully tagged lines
-
-
-if __name__ == "__main__":
-    gold_corpus = Path(DATA_DIR / "TIB_train.txt").read_text(encoding="utf-8")
-    tagged_tokens = line_by_line_tagger(gold_corpus)
-    write_tokens_to_text_file(tagged_tokens, Path(DATA_DIR / "tagged_tokens.txt"))
-    write_tokens_to_json_file(tagged_tokens, Path(DATA_DIR / "tagged_tokens.json"))

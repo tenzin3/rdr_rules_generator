@@ -25,11 +25,3 @@ def botok_word_tokenizer_pipeline(
 
     for token in botok_tokens:
         yield Token(text=remove_all_spaces(token.text), pos=token.pos)
-
-
-if __name__ == "__main__":
-    tokens = botok_word_tokenizer_pipeline(
-        "༄༅། །རྒྱལ་པོ་ ལ་ གཏམ་ བྱ་བ་ རིན་པོ་ཆེ-འི་ ཕྲེང་བ།  ༄༅༅། །རྒྱ་གར་ སྐད་དུ།"
-    )
-    for token in tokens:
-        print(token.text, token.pos)
