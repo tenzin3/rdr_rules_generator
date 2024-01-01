@@ -13,7 +13,7 @@ def get_tokenized_and_gold_corpus_tokens(text: str):
     gold_corpus_tokens = [
         Token(text=remove_all_spaces(token_text)) for token_text in gold_corpus.split()
     ]
-    return tokenized_tokens, gold_corpus_tokens
+    return list(tokenized_tokens), list(gold_corpus_tokens)
 
 
 def test_tagger():
