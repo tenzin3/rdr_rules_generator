@@ -19,4 +19,5 @@ def pipeline(
 
 
 if __name__ == "__main__":
-    pipeline(Path(DATA_DIR / "TIB_train.txt"), (30, 30))
+    file_path = DATA_DIR / "txt" / "chojuk.txt"
+    pipeline(file_path, (30, 30))
